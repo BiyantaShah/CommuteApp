@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         signup_btn = (Button)findViewById(R.id.btn_signup);
         login_btn = (Button) findViewById(R.id.btn_login);
         edEmail = (EditText)findViewById(R.id.ed_username);
@@ -60,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                // session instances should be cleared out before we proceed to add a new session instance
+                session = new Session(getApplicationContext());
+                session.setuserEmail(" ");
+                session.setusername(" ");
+                session.setuserPhone(" ");
+                session.setuserAddress(" ");
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Users");
                 myRef.addValueEventListener(new ValueEventListener() {
@@ -67,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         boolean userExists = false;
+                        boolean login = false;
                         if (dataSnapshot.exists()) {
                             GenericTypeIndicator<Map<String, Object>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Object>>() {};
                             Map<String, Object> dataMap = dataSnapshot.getValue(genericTypeIndicator );
@@ -91,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                                     if(uid[0].equals(key)){
                                         userExists = true;
                                         if(email.equals(emailId) && phoneNumber.equals(password)) {
-                                            session = new Session(getApplicationContext());
+
                                             session.setusername(uname);
                                             session.setuserEmail(email);
                                             session.setuserAddress(address);
@@ -101,11 +109,18 @@ public class MainActivity extends AppCompatActivity {
                                             startActivity(intent);
                                         }
                                         else {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                            builder.setMessage("Incorrect credentials, please enter the correct credentials")
-                                                    .setNegativeButton("Retry", null)
-                                                    .create()
-                                                    .show();
+                                            System.out.println("session email id " +session.getuserEmail());
+                                            if (!session.getuserEmail().equals(emailId)) {
+
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                                builder.setMessage("Incorrect credentials, please enter the correct credentials")
+                                                        .setNegativeButton("Retry", null)
+                                                        .create()
+                                                        .show();
+
+                                                return;
+                                            }
+
                                         }
                                     }
 
