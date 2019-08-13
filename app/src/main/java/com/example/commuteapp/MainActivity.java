@@ -67,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         boolean userExists = false;
-                        if (dataSnapshot.exists()) {
+                        if (dataSnapshot.exists())
+                        {
+
                             GenericTypeIndicator<Map<String, Object>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Object>>() {};
                             Map<String, Object> dataMap = dataSnapshot.getValue(genericTypeIndicator );
 
@@ -80,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                                     String email = (String)userData.get("userEmail");
                                     String[] uid = emailId.split("@");
                                     System.out.println("The email id is "+key + " and their phone is "+phoneNumber);
-
 
                                     // only checking for the user entered on the logging screen, not all users
                                     if(uid[0].equals(key)){
@@ -129,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+        finish();
+    }
+    @Override
+    public void onBackPressed() {
         finish();
     }
 }
