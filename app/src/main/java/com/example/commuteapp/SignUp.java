@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.util.Log;
+
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,9 +28,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+
 import java.util.Arrays;
+
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class SignUp extends AppCompatActivity {
 
@@ -41,6 +58,10 @@ public class SignUp extends AppCompatActivity {
     private EditText edphone;
     private Session session;
     // Initialize the SDK
+
+    private final String KEY = "1Hbfh667adfDEJ78";
+    private String ALGORITHM = "AES";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +107,10 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View view) {
 
                 final String name = edName.getText().toString();
-                final String password = edPwd.getText().toString();
+                String password = edPwd.getText().toString();
                 final String verifyPass = edPwd2.getText().toString();
-                final String emailid = edEmail.getText().toString();
-
+                final String emailid = edEmail.getText().toString().toLowerCase();
+//                final String homeaddress = edAddress.getText().toString();
                 final String phone = edphone.getText().toString();
 
                 // check for none of the fields to be empty
@@ -138,6 +159,10 @@ public class SignUp extends AppCompatActivity {
                 }
 
 
+                //encrypt the password
+                final String encryptedPass = encryptPassword(password);
+
+
                 session = new Session(getApplicationContext());
 
                 //check if we already have this user registered
@@ -177,9 +202,6 @@ public class SignUp extends AppCompatActivity {
                         }
 
                         if (userExists ) {
-                            String sessionEmail = session.getuserEmail();
-                            if(!sessionEmail.equals(emailid)) {
-                               // if session user is not same as entered user then its an existing user.
                                 AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                                 builder.setMessage("We have an account with this email ID, please login to the app")
                                         .setNegativeButton("Retry", null)
@@ -187,21 +209,21 @@ public class SignUp extends AppCompatActivity {
                                         .show();
 
                                 return;
-                            }
 
                         }
                         else {
                             ProfileValue profileValue = new ProfileValue();
                             profileValue.setuserName(name);
+                            profileValue.setPassword(encryptedPass);
                             profileValue.setuserAddress(homeaddress);
                             profileValue.setuserEmail(emailid);
                             profileValue.setuserPhone(phone);
 
                             final Map<String, Object> dataMap = new HashMap<String, Object>();
                             String[] email = emailid.split("@");
-
+                            String changeEmail = email[0].replace('.', '_');
                             // all validations are done so it is safe to put the data into the database
-                            dataMap.put(email[0], profileValue.toMap());
+                            dataMap.put(changeEmail, profileValue.toMap());
                             myRef.updateChildren(dataMap);
                             session.setusername(name);
                             session.setuserEmail(emailid);
@@ -223,5 +245,33 @@ public class SignUp extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String encryptPassword(String password) {
+
+        Key key = new SecretKeySpec(KEY.getBytes(),ALGORITHM);
+        String encryptedValue64 = " ";
+        try {
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte [] encryptedByteValue = cipher.doFinal(password.getBytes("utf-8"));
+            encryptedValue64 = Base64.encodeToString(encryptedByteValue, Base64.DEFAULT);
+
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+
+        return encryptedValue64;
     }
 }

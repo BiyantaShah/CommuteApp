@@ -32,8 +32,20 @@ public class Drive extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //Intent intent = new Intent(Drive.this, Navigation.class);
                 //startActivity(intent);
+
+//                Intent intent = new Intent(Drive.this, Profile.class);
+//                intent.putExtra("name", session.getusername());
+//                intent.putExtra("emailid", session.getuserEmail());
+//                intent.putExtra("phone", session.getuserPhone());
+//                intent.putExtra("homeaddress", session.getuserAddress());
+//
+//                Drive.this.startActivity(intent);
+//            }
+//        });
+
 
                 //Uri gmmIntentUri = Uri.parse("google.navigation:q=3051+S+palm+aire,+3250+S+palm+aire");
                 String url1 = "https://www.google.com/maps/dir/?api=1&destination=851 W Cypress Creek Rd, Fort Lauderdale&waypoints=";
