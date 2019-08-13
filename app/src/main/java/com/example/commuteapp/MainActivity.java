@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,13 +18,26 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class MainActivity extends AppCompatActivity {
     private Button login_btn, signup_btn;
     private EditText edEmail, edPassword;
     private Session session;
+
+    private final String KEY = "1Hbfh667adfDEJ78";
+    private String ALGORITHM = "AES";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,20 +99,25 @@ public class MainActivity extends AppCompatActivity {
 
                                 try{
                                     HashMap<String, Object> userData = (HashMap<String, Object>) data;
-                                    String phoneNumber = (String)userData.get("phone");
+                                    String passwd = (String)userData.get("password");
                                     String email = (String)userData.get("userEmail");
 
                                     //to set context
                                     String uname = (String)userData.get("username");
                                     String address = (String) userData.get("userAddress");
+                                    String phoneNumber = (String) userData.get("phone");
                                     //ending set to context
                                     String uid = emailId.split("@")[0].replace('.', '_');
-                                    System.out.println("The email id is "+key + " and their phone is "+phoneNumber);
+                                    System.out.println("The email id is "+key + " and their phone is "+passwd);
+
+                                    //decrypt password
+                                    String decrypt = decrypting(passwd);
+                                    System.out.println("hgfdfgsdfg "+decrypt);
 
                                     // only checking for the user entered on the logging screen, not all users
                                     if(uid.equals(key)){
                                         userExists = true;
-                                        if(email.equals(emailId) && phoneNumber.equals(password)) {
+                                        if(email.equals(emailId) && decrypt.equals(password)) {
 
                                             session.setusername(uname);
                                             session.setuserEmail(email);
@@ -147,6 +166,40 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String decrypting(String passwd) {
+
+        Key key = new SecretKeySpec(KEY.getBytes(),ALGORITHM);
+        Cipher cipher = null;
+        String decryptedValue = null;
+        try {
+            cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] decryptedValue64 = Base64.decode(passwd, Base64.DEFAULT);
+            byte [] decryptedByteValue = new byte[0];
+            decryptedByteValue = cipher.doFinal(decryptedValue64);
+
+            decryptedValue = new String(decryptedByteValue,"utf-8");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        }
+        catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+        catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+        catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return decryptedValue;
     }
 
     @Override

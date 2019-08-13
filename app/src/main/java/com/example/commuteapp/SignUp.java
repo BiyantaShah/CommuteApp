@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,8 +19,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 public class SignUp extends AppCompatActivity {
 
@@ -32,6 +44,10 @@ public class SignUp extends AppCompatActivity {
     private EditText edAddress;
     private EditText edphone;
     private Session session;
+
+    private final String KEY = "1Hbfh667adfDEJ78";
+    private String ALGORITHM = "AES";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +67,7 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View view) {
 
                 final String name = edName.getText().toString();
-                final String password = edPwd.getText().toString();
+                String password = edPwd.getText().toString();
                 final String verifyPass = edPwd2.getText().toString();
                 final String emailid = edEmail.getText().toString().toLowerCase();
                 final String homeaddress = edAddress.getText().toString();
@@ -102,6 +118,9 @@ public class SignUp extends AppCompatActivity {
 
                 }
 
+
+                //encrypt the password
+                final String encryptedPass = encryptPassword(password);
 
 
                 session = new Session(getApplicationContext());
@@ -154,6 +173,7 @@ public class SignUp extends AppCompatActivity {
                         else {
                             ProfileValue profileValue = new ProfileValue();
                             profileValue.setuserName(name);
+                            profileValue.setPassword(encryptedPass);
                             profileValue.setuserAddress(homeaddress);
                             profileValue.setuserEmail(emailid);
                             profileValue.setuserPhone(phone);
@@ -184,5 +204,33 @@ public class SignUp extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String encryptPassword(String password) {
+
+        Key key = new SecretKeySpec(KEY.getBytes(),ALGORITHM);
+        String encryptedValue64 = " ";
+        try {
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte [] encryptedByteValue = cipher.doFinal(password.getBytes("utf-8"));
+            encryptedValue64 = Base64.encodeToString(encryptedByteValue, Base64.DEFAULT);
+
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+
+        return encryptedValue64;
     }
 }

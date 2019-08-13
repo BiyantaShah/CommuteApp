@@ -15,6 +15,7 @@ public class ProfileValue extends Application implements Serializable {
     private String userPhone = " ";
     private String userType = " ";
     private String userCount = " ";
+    private String password =" ";
 
     public String getuserName() {
         return userName;
@@ -22,6 +23,14 @@ public class ProfileValue extends Application implements Serializable {
 
     public void setuserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 
@@ -62,6 +71,7 @@ public class ProfileValue extends Application implements Serializable {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("username", userName);
+        result.put("password", password);
         result.put("userAddress", userAddress);
         result.put("userEmail", userEmail);
         result.put("phone", userPhone);
