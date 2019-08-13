@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +23,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private Button login_btn, signup_btn;
     private EditText edEmail, edPassword;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
                                     HashMap<String, Object> userData = (HashMap<String, Object>) data;
                                     String phoneNumber = (String)userData.get("phone");
                                     String email = (String)userData.get("userEmail");
+
+                                    //to set context
+                                    String uname = (String)userData.get("username");
+                                    String address = (String) userData.get("userAddress");
+                                    //ending set to context
                                     String[] uid = emailId.split("@");
                                     System.out.println("The email id is "+key + " and their phone is "+phoneNumber);
 
@@ -87,6 +92,12 @@ public class MainActivity extends AppCompatActivity {
                                     if(uid[0].equals(key)){
                                         userExists = true;
                                         if(email.equals(emailId) && phoneNumber.equals(password)) {
+                                            session = new Session(getApplicationContext());
+                                            session.setusername(uname);
+                                            session.setuserEmail(email);
+                                            session.setuserAddress(address);
+                                            session.setuserPhone(phoneNumber);
+
                                             Intent intent = new Intent(MainActivity.this, Home.class);
                                             startActivity(intent);
                                         }

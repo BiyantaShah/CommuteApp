@@ -47,7 +47,12 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Home.this, Profile.class);
-                startActivity(intent);
+                intent.putExtra("name", session.getusername());
+                intent.putExtra("emailid", session.getuserEmail());
+                intent.putExtra("phone", session.getuserPhone());
+                intent.putExtra("homeaddress", session.getuserAddress());
+
+                Home.this.startActivity(intent);
             }
         });
 

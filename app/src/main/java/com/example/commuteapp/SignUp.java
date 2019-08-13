@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,6 +49,7 @@ public class SignUp extends AppCompatActivity {
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 final String name = edName.getText().toString();
                 final String password = edPwd.getText().toString();
                 final String verifyPass = edPwd2.getText().toString();
@@ -101,11 +103,13 @@ public class SignUp extends AppCompatActivity {
                 }
 
 
+                session = new Session(getApplicationContext());
                 //check if we already have this user registered
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         boolean userExists = false;
+                        int count = 0;
                         if (dataSnapshot.exists()) {
                             GenericTypeIndicator<Map<String, Object>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Object>>() {
                             };
@@ -115,6 +119,7 @@ public class SignUp extends AppCompatActivity {
                             for (String key : dataMap.keySet()) {
                                 Object data = dataMap.get(key);
 
+                                System.out.println("jekhfsjdhf key " +key );
                                 try {
                                     HashMap<String, Object> userData = (HashMap<String, Object>) data;
                                     String emails = (String) userData.get("userEmail");
@@ -124,6 +129,7 @@ public class SignUp extends AppCompatActivity {
                                     if (emails.equals(emailid)) {
                                         //System.out.println("comeshgdhfdgjhkgh");
                                         userExists = true;
+
                                     }
 
                                 } catch (ClassCastException e) {
@@ -134,14 +140,19 @@ public class SignUp extends AppCompatActivity {
 
                         }
 
-                        if (userExists) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
-                            builder.setMessage("We have an account with this email ID, please login to the app")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
+                        if (userExists ) {
+                            String sessionEmail = session.getuserEmail();
+                            if(!sessionEmail.equals(emailid)) {
+                               // if session user is not same as entered user then its an existing user.
+                                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                                builder.setMessage("We have an account with this email ID, please login to the app")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
 
-                            return;
+                                return;
+                            }
+
                         }
                         else {
                             ProfileValue profileValue = new ProfileValue();
@@ -152,20 +163,20 @@ public class SignUp extends AppCompatActivity {
 
                             final Map<String, Object> dataMap = new HashMap<String, Object>();
                             String[] email = emailid.split("@");
-                            
+
                             // all validations are done so it is safe to put the data into the database
                             dataMap.put(email[0], profileValue.toMap());
                             myRef.updateChildren(dataMap);
-                            session = new Session(getApplicationContext());
                             session.setusername(name);
                             session.setuserEmail(emailid);
                             session.setuserAddress(homeaddress);
                             session.setuserPhone(phone);
 
-
                             Intent intent = new Intent(SignUp.this, Home.class);
                             startActivity(intent);
+
                         }
+
                     }
 
                     @Override

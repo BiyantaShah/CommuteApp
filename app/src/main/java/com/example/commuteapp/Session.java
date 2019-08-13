@@ -16,9 +16,9 @@ public class Session {
         prefs.edit().putString("username", usename).commit();
     }
 
-    public String getusename() {
-        String usename = prefs.getString("username","");
-        return usename;
+    public String getusername() {
+        String username = prefs.getString("username","");
+        return username;
     }
 
 
