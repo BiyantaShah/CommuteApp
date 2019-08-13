@@ -122,7 +122,7 @@ public class SignUp extends AppCompatActivity {
                                     System.out.println("emails from db" + emails + "email given" + emailid );
                                     // check if user exists
                                     if (emails.equals(emailid)) {
-                                        System.out.println("comeshgdhfdgjhkgh");
+                                        //System.out.println("comeshgdhfdgjhkgh");
                                         userExists = true;
                                     }
 
