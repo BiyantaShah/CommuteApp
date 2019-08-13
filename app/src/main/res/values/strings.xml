@@ -5,4 +5,5 @@
     <string name="title_activity_content_home">content_home</string>
     <string name="title_activity_drive">Drive</string>
     <string name="title_activity_ride">Ride</string>
+    <string name="title_activity_navigation">Map</string>
 </resources>

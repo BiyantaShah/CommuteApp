@@ -6,11 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +37,14 @@ public class SignUp extends AppCompatActivity {
     private EditText edEmail;
     private EditText edPwd;
     private EditText edPwd2;
-    private EditText edAddress;
+    private String homeaddress;
     private EditText edphone;
     private Session session;
+    // Initialize the SDK
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
@@ -43,9 +53,34 @@ public class SignUp extends AppCompatActivity {
         edEmail = (EditText)findViewById(R.id.ed_email);
         edPwd = (EditText)findViewById(R.id.ed_pwd);
         edPwd2 = (EditText)findViewById(R.id.ed_pwd_2);
-        edAddress = (EditText)findViewById(R.id.ed_address);
+        //edAddress = (EditText)findViewById(R.id.ed_address);
         edphone = (EditText)findViewById(R.id.ed_phone);
+        Places.initialize(getApplicationContext(), "AIzaSyC_QsnBBH5D9dfI6_TlNy5CKn60H5qQI5s");
 
+        // Create a new Places client instance
+        PlacesClient placesClient = Places.createClient(this);
+
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.ed_address);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place)
+            {
+                Log.i("Address", "Place: " + place.getName() + ", " + place.getId());
+                homeaddress = place.getName();
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,11 +89,11 @@ public class SignUp extends AppCompatActivity {
                 final String password = edPwd.getText().toString();
                 final String verifyPass = edPwd2.getText().toString();
                 final String emailid = edEmail.getText().toString();
-                final String homeaddress = edAddress.getText().toString();
+
                 final String phone = edphone.getText().toString();
 
                 // check for none of the fields to be empty
-                if (name.isEmpty() || password.isEmpty() || verifyPass.isEmpty() ||emailid.isEmpty() || homeaddress.isEmpty() || phone.isEmpty()) {
+                if (name.isEmpty() || password.isEmpty() || verifyPass.isEmpty() ||emailid.isEmpty() || homeaddress.isEmpty()|| phone.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                     builder.setMessage("Please enter values in all the fields")
                             .setNegativeButton("Retry", null)
@@ -104,8 +139,9 @@ public class SignUp extends AppCompatActivity {
 
 
                 session = new Session(getApplicationContext());
+
                 //check if we already have this user registered
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         boolean userExists = false;

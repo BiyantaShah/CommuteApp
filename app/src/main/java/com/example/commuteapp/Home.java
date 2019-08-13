@@ -51,7 +51,6 @@ public class Home extends AppCompatActivity {
                 intent.putExtra("emailid", session.getuserEmail());
                 intent.putExtra("phone", session.getuserPhone());
                 intent.putExtra("homeaddress", session.getuserAddress());
-
                 Home.this.startActivity(intent);
             }
         });
@@ -79,7 +78,10 @@ public class Home extends AppCompatActivity {
 
                             }
                         });
-                        builder.create().show();
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             }
         });
 

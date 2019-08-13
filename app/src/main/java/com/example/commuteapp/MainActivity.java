@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Users");
-                myRef.addValueEventListener(new ValueEventListener() {
+
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -89,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
                                     System.out.println("The email id is "+key + " and their phone is "+phoneNumber);
 
                                     // only checking for the user entered on the logging screen, not all users
-                                    if(uid[0].equals(key)){
+                                    if(uid[0].equals(key))
+                                    {
                                         userExists = true;
                                         if(email.equals(emailId) && phoneNumber.equals(password)) {
                                             session = new Session(getApplicationContext());
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                                             startActivity(intent);
                                         }
                                         else {
+
                                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                             builder.setMessage("Incorrect credentials, please enter the correct credentials")
                                                     .setNegativeButton("Retry", null)

@@ -35,23 +35,6 @@ public class Ride extends AppCompatActivity {
         });
 
 
-        Button drive_button = findViewById(R.id.btn_change_2);
-        drive_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent intent = new Intent(Ride.this, Home.class);
-                startActivity(intent);
-            }
-        });
     }
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if ((keyCode == KeyEvent.KEYCODE_BACK))
-        {
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+
 }
