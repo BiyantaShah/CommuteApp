@@ -53,7 +53,7 @@ public class SignUp extends AppCompatActivity {
                 final String name = edName.getText().toString();
                 final String password = edPwd.getText().toString();
                 final String verifyPass = edPwd2.getText().toString();
-                final String emailid = edEmail.getText().toString();
+                final String emailid = edEmail.getText().toString().toLowerCase();
                 final String homeaddress = edAddress.getText().toString();
                 final String phone = edphone.getText().toString();
 
@@ -103,9 +103,10 @@ public class SignUp extends AppCompatActivity {
                 }
 
 
+
                 session = new Session(getApplicationContext());
                 //check if we already have this user registered
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         boolean userExists = false;
@@ -141,9 +142,6 @@ public class SignUp extends AppCompatActivity {
                         }
 
                         if (userExists ) {
-                            String sessionEmail = session.getuserEmail();
-                            if(!sessionEmail.equals(emailid)) {
-                               // if session user is not same as entered user then its an existing user.
                                 AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                                 builder.setMessage("We have an account with this email ID, please login to the app")
                                         .setNegativeButton("Retry", null)
@@ -151,7 +149,6 @@ public class SignUp extends AppCompatActivity {
                                         .show();
 
                                 return;
-                            }
 
                         }
                         else {
@@ -163,9 +160,9 @@ public class SignUp extends AppCompatActivity {
 
                             final Map<String, Object> dataMap = new HashMap<String, Object>();
                             String[] email = emailid.split("@");
-
+                            String changeEmail = email[0].replace('.', '_');
                             // all validations are done so it is safe to put the data into the database
-                            dataMap.put(email[0], profileValue.toMap());
+                            dataMap.put(changeEmail, profileValue.toMap());
                             myRef.updateChildren(dataMap);
                             session.setusername(name);
                             session.setuserEmail(emailid);

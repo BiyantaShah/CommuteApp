@@ -62,7 +62,7 @@ public class Session {
         prefs.edit().putString("userCount", userCount).commit();
     }
     public String getuserCount() {
-        String userPhone = prefs.getString("userCount","");
-        return userPhone;
+        String userCount = prefs.getString("userCount","");
+        return userCount;
     }
 }

@@ -71,8 +71,9 @@ public class Home extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 session.setuserCount(no_riders[which]);
                                 session.setuserType("d");
-                                myRef.child(session.getuserEmail().split("@")[0]).child("type").setValue(session.getuserType());
-                                myRef.child(session.getuserEmail().split("@")[0]).child("count").setValue(session.getuserCount());
+                                String changedUid = session.getuserEmail().split("@")[0].replace('.','_');
+                                myRef.child(changedUid).child("type").setValue(session.getuserType());
+                                myRef.child(changedUid).child("count").setValue(session.getuserCount());
 
                                 Intent intent = new Intent(Home.this, Drive.class);
                                 startActivity(intent);
@@ -90,8 +91,9 @@ public class Home extends AppCompatActivity {
             public void onClick(View view) {
                 session.setuserCount("0");
                 session.setuserType("r");
-                myRef.child(session.getuserEmail().split("@")[0]).child("type").setValue(session.getuserType());
-                myRef.child(session.getuserEmail().split("@")[0]).child("count").setValue(session.getuserCount());
+                String changedUid = session.getuserEmail().split("@")[0].replace('.','_');
+                myRef.child(changedUid).child("type").setValue(session.getuserType());
+                myRef.child(changedUid).child("count").setValue(session.getuserCount());
                 Intent intent = new Intent(Home.this, Ride.class);
                 startActivity(intent);
             }

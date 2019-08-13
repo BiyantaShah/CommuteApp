@@ -13,6 +13,8 @@ public class ProfileValue extends Application implements Serializable {
     private String userAddress = " ";
     private String userEmail = " ";
     private String userPhone = " ";
+    private String userType = " ";
+    private String userCount = " ";
 
     public String getuserName() {
         return userName;
@@ -47,6 +49,14 @@ public class ProfileValue extends Application implements Serializable {
         this.userPhone = userPhone;
     }
 
+    public String getUserType() {return userType;}
+
+    public void setUserType(String userType) {this.userType = userType;}
+
+    public String getUserCount() {return userCount;}
+
+    public  void setUserCount(String userCount) {this.userCount = userCount;}
+
 
 //    @Exclude
     public Map<String, Object> toMap() {
@@ -55,6 +65,8 @@ public class ProfileValue extends Application implements Serializable {
         result.put("userAddress", userAddress);
         result.put("userEmail", userEmail);
         result.put("phone", userPhone);
+        result.put("type", userType);
+        result.put("count", userCount);
 
         return result;
     }

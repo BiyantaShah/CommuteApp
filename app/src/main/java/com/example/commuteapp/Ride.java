@@ -15,12 +15,16 @@ import android.widget.TextView;
 
 public class Ride extends AppCompatActivity {
 
+    private Session session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        session = new com.example.commuteapp.Session(getApplicationContext());
 
         TextView textView = (TextView) findViewById(R.id.info_tv_2);
         textView.setText("We will notify you once we have a match");
@@ -30,7 +34,12 @@ public class Ride extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Ride.this, Profile.class);
-                startActivity(intent);
+                intent.putExtra("name", session.getusername());
+                intent.putExtra("emailid", session.getuserEmail());
+                intent.putExtra("phone", session.getuserPhone());
+                intent.putExtra("homeaddress", session.getuserAddress());
+
+                Ride.this.startActivity(intent);
             }
         });
 

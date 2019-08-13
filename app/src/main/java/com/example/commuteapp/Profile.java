@@ -83,12 +83,24 @@ public class Profile extends AppCompatActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Users");
 
-                //setting the changed values to profile
+                //updating the session variable
+                session = new Session(getApplicationContext());
+                session.setusername(name);
+                session.setuserEmail(emailID);
+                session.setuserAddress(addressChanged);
+                session.setuserPhone(phoneChanged);
+
+                String userType = session.getuserType();
+                String passCount = session.getuserCount();
+
+                //setting the values to profile
                 ProfileValue profileValue = new ProfileValue();
                 profileValue.setuserAddress(addressChanged);
                 profileValue.setuserPhone(phoneChanged);
                 profileValue.setuserName(name);
                 profileValue.setuserEmail(emailID);
+                profileValue.setUserType(userType);
+                profileValue.setUserCount(passCount);
 
                 final Map<String, Object> dataMap = new HashMap<String, Object>();
 
@@ -97,12 +109,7 @@ public class Profile extends AppCompatActivity {
                 dataMap.put(key, profileValue.toMap());
                 myRef.updateChildren(dataMap);
 
-                //updating the session variable
-                session = new Session(getApplicationContext());
-                session.setusername(name);
-                session.setuserEmail(emailID);
-                session.setuserAddress(addressChanged);
-                session.setuserPhone(phoneChanged);
+
 
                 Intent intent = new Intent(Profile.this, Home.class);
                 startActivity(intent);

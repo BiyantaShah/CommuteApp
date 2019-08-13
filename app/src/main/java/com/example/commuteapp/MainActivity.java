@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String emailId = edEmail.getText().toString();
+                final String emailId = edEmail.getText().toString().toLowerCase();
                 final String password = edPassword.getText().toString();
 
                 //check for whether a valid email id has been added
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 session.setuserAddress(" ");
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Users");
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -92,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
                                     String uname = (String)userData.get("username");
                                     String address = (String) userData.get("userAddress");
                                     //ending set to context
-                                    String[] uid = emailId.split("@");
+                                    String uid = emailId.split("@")[0].replace('.', '_');
                                     System.out.println("The email id is "+key + " and their phone is "+phoneNumber);
 
                                     // only checking for the user entered on the logging screen, not all users
-                                    if(uid[0].equals(key)){
+                                    if(uid.equals(key)){
                                         userExists = true;
                                         if(email.equals(emailId) && phoneNumber.equals(password)) {
 
@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
                                             startActivity(intent);
                                         }
                                         else {
-                                            System.out.println("session email id " +session.getuserEmail());
-                                            if (!session.getuserEmail().equals(emailId)) {
 
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                                 builder.setMessage("Incorrect credentials, please enter the correct credentials")
@@ -119,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
                                                         .show();
 
                                                 return;
-                                            }
 
                                         }
                                     }
