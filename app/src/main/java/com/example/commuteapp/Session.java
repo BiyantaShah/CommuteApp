@@ -49,4 +49,20 @@ public class Session {
         String userPhone = prefs.getString("userPhone","");
         return userPhone;
     }
+
+    public void setuserType(String userType) {
+        prefs.edit().putString("userType", userType).commit();
+    }
+    public String getuserType() {
+        String userPhone = prefs.getString("userType","");
+        return userPhone;
+    }
+
+    public void setuserCount(String userCount) {
+        prefs.edit().putString("userCount", userCount).commit();
+    }
+    public String getuserCount() {
+        String userPhone = prefs.getString("userCount","");
+        return userPhone;
+    }
 }
