@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                                     session.setpersonPhone((String)driverData.get("phone"));
                                                     session.setuserPerson((String)driverData.get("username"));
                                                     session.setpersonAd((String)driverData.get("userAddress"));
-                                                    System.out.println("gggggggggggggggggggggggggg"+session.getpersonPhone()+"==="+session.getuserPerson());
+                                                    //System.out.println("gggggggggggggggggggggggggg"+session.getpersonPhone()+"==="+session.getuserPerson());
                                                     Intent intent = new Intent(MainActivity.this, Rider.class);
                                                     startActivity(intent);
                                                 }

@@ -26,8 +26,8 @@ public class Driver extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.info_tv_2_d);
 
-        String t = session.getuserPerson().replace(":","           ");
-        t = t + "\n"+session.getpersonPhone().replace(":", "  ");
+        String t = session.getuserPerson().replace(":","               ");
+        t = t + "\n\n"+session.getpersonPhone().replace(":", "  ");
         textView.setText(t);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
