@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                     String uname = (String)userData.get("username");
                                     String address = (String) userData.get("userAddress");
                                     String phoneNumber = (String) userData.get("phone");
+                                    String type = (String) userData.get("type");
                                     //ending set to context
                                     String uid = emailId.split("@")[0].replace('.', '_');
                                     System.out.println("The email id is "+key + " and their phone is "+passwd);
@@ -126,9 +127,80 @@ public class MainActivity extends AppCompatActivity {
                                             session.setuserEmail(email);
                                             session.setuserAddress(address);
                                             session.setuserPhone(phoneNumber);
+                                            if(userData.containsKey("results"))
+                                            {
+                                                if (type.equals("r"))
+                                                {
+                                                    String mydrivers = (String)userData.get("results");
 
-                                            Intent intent = new Intent(MainActivity.this, Home.class);
-                                            startActivity(intent);
+                                                    //session.setpersonPhone((String);
+                                                    Object d = dataMap.get(mydrivers);
+                                                    HashMap<String, Object> driverData = (HashMap<String, Object>) d;
+                                                    session.setpersonPhone((String)driverData.get("phone"));
+                                                    session.setuserPerson((String)driverData.get("username"));
+                                                    session.setpersonAd((String)driverData.get("userAddress"));
+                                                    System.out.println("gggggggggggggggggggggggggg"+session.getpersonPhone()+"==="+session.getuserPerson());
+                                                    Intent intent = new Intent(MainActivity.this, Rider.class);
+                                                    startActivity(intent);
+                                                }
+                                                else
+                                                {
+                                                    String [] myriders = ((String)userData.get("results")).split(":");
+                                                    session.setuserPerson((String)userData.get("results"));
+                                                    String ph= "";
+                                                    String pn = "";
+                                                    String pAd ="";
+                                                    int numberOfItems = myriders.length;
+                                                    for (int i=0; i<numberOfItems; i++)
+                                                    {
+                                                        String name = myriders[i];
+                                                        Object d = dataMap.get(name);
+                                                        HashMap<String, Object> driverData = (HashMap<String, Object>) d;
+                                                        if(ph.isEmpty())
+                                                        {
+                                                        ph = (String) driverData.get("phone");
+                                                        }
+                                                        else
+                                                            {
+                                                                ph= ph+":"+(String) driverData.get("phone");
+                                                            }
+                                                        if(pn.isEmpty())
+                                                        {
+                                                            pn = (String) driverData.get("username");
+                                                        }
+                                                        else
+                                                        {
+                                                            pn= pn+":"+(String) driverData.get("username");
+                                                        }
+                                                        if(pAd.isEmpty())
+                                                        {
+                                                            pAd = (String) driverData.get("userAddress");
+                                                        }
+                                                        else
+                                                        {
+                                                            pAd= pAd+"|"+(String) driverData.get("userAddress");
+                                                        }
+
+                                                    }
+
+                                                    session.setuserPerson(pn);
+                                                    if(!ph.isEmpty())
+                                                    {
+                                                        session.setpersonPhone(ph);
+                                                    }
+                                                    session.setpersonAd(pAd);
+                                                    //System.out.println("gggggggggggggggggggggggggg"+session.getpersonPhone()+"==="+session.getuserPerson());
+                                                    Intent intent = new Intent(MainActivity.this, Driver.class);
+                                                    startActivity(intent);
+                                                }
+
+                                            }
+                                            else
+                                                {
+
+                                                    Intent intent = new Intent(MainActivity.this, Home.class);
+                                                    startActivity(intent);
+                                            }
                                         }
                                         else {
 

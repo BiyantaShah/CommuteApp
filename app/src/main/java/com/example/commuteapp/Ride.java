@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,7 +18,6 @@ import android.widget.TextView;
 public class Ride extends AppCompatActivity {
 
     private Session session;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,9 @@ public class Ride extends AppCompatActivity {
         session = new com.example.commuteapp.Session(getApplicationContext());
 
         TextView textView = (TextView) findViewById(R.id.info_tv_2);
+
         textView.setText("We will notify you once we have a match");
+
 
         FloatingActionButton fab = findViewById(R.id.profile_fab_2);
         fab.setOnClickListener(new View.OnClickListener() {

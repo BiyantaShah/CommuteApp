@@ -36,27 +36,19 @@ public class Drive extends AppCompatActivity {
                 //Intent intent = new Intent(Drive.this, Navigation.class);
                 //startActivity(intent);
 
-//                Intent intent = new Intent(Drive.this, Profile.class);
-//                intent.putExtra("name", session.getusername());
-//                intent.putExtra("emailid", session.getuserEmail());
-//                intent.putExtra("phone", session.getuserPhone());
-//                intent.putExtra("homeaddress", session.getuserAddress());
-//
-//                Drive.this.startActivity(intent);
-//            }
-//        });
+                Intent intent = new Intent(Drive.this, Profile.class);
+                intent.putExtra("name", session.getusername());
+                intent.putExtra("emailid", session.getuserEmail());
+                intent.putExtra("phone", session.getuserPhone());
+                intent.putExtra("homeaddress", session.getuserAddress());
+
+                Drive.this.startActivity(intent);
+            }
+        });
 
 
                 //Uri gmmIntentUri = Uri.parse("google.navigation:q=3051+S+palm+aire,+3250+S+palm+aire");
-                String url1 = "https://www.google.com/maps/dir/?api=1&destination=851 W Cypress Creek Rd, Fort Lauderdale&waypoints=";
-                String url2 = "1100 Powerline Rd|1350 S Powerline rd";
-                String url3 = "&travelmode=driving&dir_action=navigate";
 
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1+url2+url3));
-                mapIntent.setPackage("com.google.android.apps.maps");
-                startActivity(mapIntent);
-            }
-        });
 
 
     }

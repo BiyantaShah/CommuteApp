@@ -65,4 +65,28 @@ public class Session {
         String userCount = prefs.getString("userCount","");
         return userCount;
     }
+
+    public void setuserPerson(String person) {
+        prefs.edit().putString("person", person).commit();
+    }
+    public String getuserPerson() {
+        String person = prefs.getString("person","");
+        return person;
+    }
+
+    public void setpersonPhone(String personPhone) {
+        prefs.edit().putString("personPhone", personPhone).commit();
+    }
+    public String getpersonPhone() {
+        String personPhone = prefs.getString("personPhone","");
+        return personPhone;
+    }
+
+    public void setpersonAd(String personAd) {
+        prefs.edit().putString("personAd", personAd).commit();
+    }
+    public String getpersonAd() {
+        String personAd = prefs.getString("personAd","");
+        return personAd;
+    }
 }

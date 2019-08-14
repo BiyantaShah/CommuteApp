@@ -6,4 +6,6 @@
     <string name="title_activity_drive">Drive</string>
     <string name="title_activity_ride">Ride</string>
     <string name="title_activity_navigation">Map</string>
+    <string name="title_activity_rider">Rider</string>
+    <string name="title_activity_driver">Driver</string>
 </resources>
