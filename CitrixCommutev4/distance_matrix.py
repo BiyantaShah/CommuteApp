@@ -9,7 +9,7 @@ import firebase
 def create_data():
   """Creates the data."""
   data = {}
-  data['API_key'] = 'AIzaSyCDpX3G-kBWbkSIJr91CgvO8EDZ82NNcxo'
+  data['API_key'] = '<Insert API Key>'
   data['addresses'] = firebase.firebase()[0]
   return data
 
